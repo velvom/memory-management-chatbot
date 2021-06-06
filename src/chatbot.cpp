@@ -37,6 +37,7 @@ ChatBot::~ChatBot()
     // deallocate heap memory
     if(_image != NULL) // Attention: wxWidgets used NULL and not nullptr
     {
+        std::cout << "~ChatBot delete" << std::endl;
         delete _image;
         _image = NULL;
     }
@@ -44,6 +45,91 @@ ChatBot::~ChatBot()
 
 //// STUDENT CODE
 ////
+
+// Task 2
+ChatBot::ChatBot(const ChatBot& src)
+{
+    // Perform Deep copy
+    _image = new wxBitmap();
+    *_image = *src._image;
+
+    _chatLogic = src._chatLogic;
+    _rootNode = src._rootNode;
+    _currentNode = src._currentNode;
+
+    std::cout << "ChatBot Copy Constructor" << std::endl;
+}
+
+ChatBot& ChatBot::operator=(const ChatBot& src)
+{
+    std::cout << "ChatBot Assignment Operator" << std::endl;
+
+    if (this == &src) {
+        return *this;
+    }
+
+    if (_image != NULL) {
+        delete _image;
+    }
+   
+    // Perform Deep copy
+    _image = new wxBitmap();
+    *_image = *src._image;
+
+    _chatLogic = src._chatLogic;
+    _rootNode = src._rootNode;
+    _currentNode = src._currentNode;
+
+    return *this;
+}
+
+ChatBot::ChatBot(ChatBot&& src)
+{
+    std::cout << "ChatBot Move Constructor" << std::endl;
+    
+    _image = src._image;
+    src._image = nullptr;
+
+    _chatLogic = src._chatLogic;
+    src._chatLogic = nullptr;
+    // Point ChatLogic to this ChatBot
+    _chatLogic->SetChatbotHandle(this);
+
+    _rootNode = src._rootNode;
+    src._rootNode = nullptr;
+
+    _currentNode = src._currentNode;
+    src._currentNode = nullptr;
+}
+
+ChatBot& ChatBot::operator=(ChatBot&& src)
+{
+    std::cout << "ChatBot Move Assignment Operator" << std::endl;
+
+    if (this == &src) {
+        return *this;
+    }
+
+    if (_image != NULL) {
+        delete _image;
+    }
+   
+    _image = src._image;
+    src._image = nullptr;
+
+    _chatLogic = src._chatLogic;
+    src._chatLogic = nullptr;
+    // Point ChatLogic to this ChatBot
+    _chatLogic->SetChatbotHandle(this);
+
+    _rootNode = src._rootNode;
+    src._rootNode = nullptr;
+
+    _currentNode = src._currentNode;
+    src._currentNode = nullptr;
+
+    return *this;
+}
 
 ////
 //// EOF STUDENT CODE
